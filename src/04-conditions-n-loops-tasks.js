@@ -296,8 +296,13 @@ function reverseString(str) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  let number = num;
+  if (num < 0) {
+    number = num * -1;
+  }
+
+  return parseInt(String(number).split('').reverse().join(''), 10);
 }
 
 /**
@@ -320,8 +325,24 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const digits = String(ccn).split('').map(Number);
+  let sum = 0;
+  let shouldDouble = false;
+
+  for (let i = digits.length - 1; i >= 0; i -= 1) {
+    let current = digits[i];
+
+    if (shouldDouble) {
+      current *= 2;
+      if (current > 9) current -= 9;
+    }
+
+    sum += current;
+    shouldDouble = !shouldDouble;
+  }
+
+  return sum % 10 === 0;
 }
 
 /**
@@ -338,8 +359,16 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const strNumber = `${num}`;
+  let summ = 0;
+  for (let i = 0; i < strNumber.length; i += 1) {
+    summ += parseInt(strNumber[i], 10);
+  }
+  if (summ > 9) {
+    return getDigitalRoot(summ);
+  }
+  return summ;
 }
 
 /**
@@ -363,8 +392,44 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  if (str === '') return true;
+  if (str.length % 2 !== 0) return false;
+
+  const stack = new Array(str.length);
+  let ptr = 0;
+
+  for (let i = 0; i < str.length; i += 1) {
+    const c = str[i];
+    switch (c) {
+      case '(':
+      case '{':
+      case '[':
+      case '<':
+        stack[ptr] = c;
+        ptr += 1;
+        break;
+      case ')':
+        if (ptr === 0 || stack[ptr - 1] !== '(') return false;
+        ptr -= 1;
+        break;
+      case '}':
+        if (ptr === 0 || stack[ptr - 1] !== '{') return false;
+        ptr -= 1;
+        break;
+      case ']':
+        if (ptr === 0 || stack[ptr - 1] !== '[') return false;
+        ptr -= 1;
+        break;
+      case '>':
+        if (ptr === 0 || stack[ptr - 1] !== '<') return false;
+        ptr -= 1;
+        break;
+      default:
+        break;
+    }
+  }
+  return ptr === 0;
 }
 
 /**
